@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #navbar{
+            height:100px;
+            width:100%;
+            display: flex;
+            justify-content: space-around;
+        }
+        #navbar>div{
+            display: flex;
+        }
+        .class1{
+            height:15px;
+            width:10%;
+            gap: 10px;
+            padding-top: 10px;
+            
+        }
+        .class2{
+            height:75px;
+            width:45%;
+            
+        }
+        #search{
+            height:30px;
+            width:90%;
+            margin: auto;
+            margin-top: 70px;
+
+        }
+        #img{
+            height:50px;
+            width:45%;
+            padding-top: 50px ;
+        }
+        img{
+            height:50px;
+            width:80%;
+            padding-left: 30px;
+            margin-bottom: 70px;
+        
+
+        }
+        #search_results{
+            display:grid;
+            grid-template-columns: repeat(4,20%);
+            grid-gap: 5%;
+        }
+        #search_results{
+            height:100px;
+            width:100%;
+        }
+        #button{
+            margin-top: 30px;
+            margin-bottom: 30px;
+            margin-top: 70px;
+            height: 29px;
+            margin-bottom: 20px;
+            padding-right: 10px;
+            background-color: black;
+            color: white;
+
+        }
+        h1{
+            margin-top: 55px;
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar">
+        <div class="class1"><div id="img"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/YouTube_social_white_square_%282017%29.svg/2048px-YouTube_social_white_square_%282017%29.svg.png"></div><h1>Youtube</h1></div>
+        <div class="class2"><input type="search" id="search"><button id="button" onclick="searchVideos()">Search</button></div>
+
+    </div>
+    <div id="search_results"></div>
+</body>
+</html>
+<script>
+  //  https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${inp}&key=AIzaSyD5O-gituDvhTKjsiDWNWqTgLCTvC2A26E&maxResults=50
+   const search_results_div=document.getElementById('search_results')
+    const searchVideos=async ()=>{
+        try{
+            let input=document.getElementById("search").value
+            let res=await fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${input}&key=AIzaSyCoAgzQBNT-VFfbq0QcXdyozqVo_0ALqYY&maxResults=50`)
+            let data=await res.json()
+            let videos=data.items
+            console.log(videos)
+            appendVideos(videos)
+
+        }
+        catch (err){
+            console.log("err:",err)
+        }
+    }
+    const appendVideos=(data)=>{
+        search_results_div.innerHTML=null
+        data.forEach((el)=>{
+            let div =document.createElement("div")
+            let title=document.createElement("p")
+            title.innerText=el.snippet.title
+            let iframe=document.createElement("iframe")
+            iframe.src=`https://www.youtube.com/embed/${el.id.videoId}`
+            iframe.height="250px"
+            iframe.width="350px"
+            iframe.allow="fullscreen"
+            div.append(iframe,title)
+            search_results_div.append(div)
+
+       })
+
+   }
+//"https://www.youtube.com/embed/hyij0Aq1mDg"
+</script>
